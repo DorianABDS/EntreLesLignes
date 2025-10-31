@@ -2,9 +2,7 @@ name: Deploy Frontend to Hostinger
 
 on:
   push:
-    branches:
-      - main
-      - ci
+    branches: [ main, ci-cd ]
 
 jobs:
   build-and-deploy:
@@ -17,7 +15,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '22'
+          node-version: '20.x'
 
       - name: Install dependencies
         working-directory: ./frontend

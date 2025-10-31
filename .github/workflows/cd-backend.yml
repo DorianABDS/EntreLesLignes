@@ -2,7 +2,7 @@ name: CD Backend - Render
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, ci-cd ]
     paths:
       - 'backend/**'
       - 'render.yml'
