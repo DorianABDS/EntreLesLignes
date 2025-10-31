@@ -39,7 +39,7 @@ jobs:
       run: npm ci
 
     - name: Validate Prisma schema
-      run: npx prisma validate
+      run: npx dotenv -e backend/.env -- npx prisma validate
 
     - name: Generate Prisma Client
       run: npx prisma generate
