@@ -35,27 +35,22 @@ jobs:
         cache: 'npm'
         cache-dependency-path: backend/package-lock.json
 
-    - name: Set DATABASE_URL
-      run: echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> $GITHUB_ENV
-
     - name: Install dependencies
       run: npm ci
 
     - name: Validate Prisma schema
-      run: npx prisma validate
+      run: npx dotenv -e .env -- npx prisma validate
 
     - name: Generate Prisma Client
-      run: npx prisma generate
+      run: npx dotenv -e .env -- npx prisma generate
 
     - name: Run linter
       run: npm run lint
       continue-on-error: true
 
     - name: Run tests
-      run: npm test
+      run: npx dotenv -e .env -- npm test
       continue-on-error: true
-      env:
-        DATABASE_URL: ${{ secrets.DATABASE_URL }}
 
     - name: Build project
       run: npm run build
