@@ -2,12 +2,12 @@ name: CI Backend
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, ci-cd ]
     paths:
       - 'backend/**'
       - '.github/workflows/ci-backend.yml'
   pull_request:
-    branches: [ main ]
+    branches: [ main, ci-cd ]
     paths:
       - 'backend/**'
       - '.github/workflows/ci-backend.yml'
@@ -38,6 +38,9 @@ jobs:
     - name: Install dependencies
       run: npm ci
 
+    - name: Set DATABASE_URL
+      run: echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> $GITHUB_ENV
+
     - name: Validate Prisma schema
       run: npx prisma validate
 
@@ -49,10 +52,8 @@ jobs:
       continue-on-error: true
 
     - name: Run tests
-      run: npm test
+      run: npx dotenv -e .env -- npm test
       continue-on-error: true
-      env:
-        DATABASE_URL: ${{ secrets.DATABASE_URL }}
 
     - name: Build project
       run: npm run build

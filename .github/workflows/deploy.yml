@@ -1,17 +1,12 @@
-name: Deploy React + Tailwind Frontend to Hostinger
+name: Deploy Frontend to Hostinger
 
 on:
   push:
-    branches:
-      - main
+    branches: [ main, ci-cd ]
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
-
-    defaults:
-      run:
-        working-directory: ./frontend
 
     steps:
       - name: Checkout code
@@ -20,13 +15,18 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '22'
+          node-version: '20.x'
 
       - name: Install dependencies
+        working-directory: ./frontend
         run: npm ci
 
       - name: Build React + Tailwind
+        working-directory: ./frontend
         run: npm run build
+
+      - name: Verify build output
+        run: ls -la ./frontend/dist
 
       - name: Deploy to Hostinger via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
@@ -34,5 +34,5 @@ jobs:
           server: ${{ secrets.FTP_HOST }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          local-dir: dist/
-          server-dir: /domains/entreleslignes.abbadessa-dorian.fr/public_html/
+          local-dir: ./frontend/dist/
+          server-dir: /public_html/
