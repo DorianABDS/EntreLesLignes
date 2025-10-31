@@ -1,4 +1,5 @@
 name: CI Frontend
+# Run continuous integration for the frontend on push or PR to main/ci-cd if frontend files or this workflow change
 
 on:
   push:
@@ -14,21 +15,24 @@ on:
 
 jobs:
   frontend-ci:
+    # Frontend CI job running on Ubuntu
     runs-on: ubuntu-latest
 
     defaults:
       run:
-        working-directory: ./frontend
+        working-directory: ./frontend  # Run commands from frontend folder
 
     strategy:
       matrix:
-        node-version: [20.x]
+        node-version: [20.x]  # Test against Node 20
 
     steps:
     - name: Checkout code
+      # Get repository code
       uses: actions/checkout@v4
 
     - name: Setup Node.js ${{ matrix.node-version }}
+      # Install Node.js and enable npm caching
       uses: actions/setup-node@v4
       with:
         node-version: ${{ matrix.node-version }}
@@ -36,19 +40,24 @@ jobs:
         cache-dependency-path: frontend/package-lock.json
 
     - name: Install dependencies
+      # Install npm dependencies
       run: npm ci
 
     - name: Run linter
+      # Run code linter, continue on error
       run: npm run lint
       continue-on-error: true
 
     - name: Run tests
+      # Run tests, continue on error
       run: npm test
       continue-on-error: true
 
     - name: Build project
+      # Build frontend
       run: npm run build
 
     - name: Security audit
+      # Run npm audit at moderate level, continue on error
       run: npm audit --audit-level=moderate
       continue-on-error: true

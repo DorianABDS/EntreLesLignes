@@ -3,6 +3,7 @@ import { verifyToken } from "../middlewares/auth.js"
 
 const router = express.Router()
 
+// Protected route for user library
 router.get("/library", verifyToken, (req, res) => {
   res.json({ message: `Welcome user ${req.user.email} to your library` })
 })

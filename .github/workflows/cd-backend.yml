@@ -1,4 +1,5 @@
 name: CD Backend - Render
+# Deploy backend to Render on push to main or ci-cd if relevant files change
 
 on:
   push:
@@ -10,13 +11,16 @@ on:
 
 jobs:
   deploy:
+    # Run deploy job on Ubuntu
     runs-on: ubuntu-latest
 
     steps:
     - name: Checkout code
+      # Get repo code
       uses: actions/checkout@v4
 
     - name: Deploy to Render
+      # Deploy backend
       uses: johnbeynon/render-deploy-action@v0.0.8
       with:
         service-id: ${{ secrets.RENDER_SERVICE_ID }}

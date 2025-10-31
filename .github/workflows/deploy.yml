@@ -1,4 +1,5 @@
 name: Deploy Frontend to Hostinger
+# Build frontend and deploy to Hostinger via FTP on push to main/ci-cd
 
 on:
   push:
@@ -6,29 +7,36 @@ on:
 
 jobs:
   build-and-deploy:
+    # Job to build frontend and deploy
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
+        # Get repository code
         uses: actions/checkout@v3
 
       - name: Setup Node.js
+        # Install Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '20.x'
 
       - name: Install dependencies
+        # Install npm dependencies for frontend
         working-directory: ./frontend
         run: npm ci
 
       - name: Build React + Tailwind
+        # Build frontend project
         working-directory: ./frontend
         run: npm run build
 
       - name: Verify build output
+        # Check build folder contents
         run: ls -la ./frontend/dist
 
       - name: Deploy to Hostinger via FTP
+        # Deploy built files to Hostinger using FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
           server: ${{ secrets.FTP_HOST }}
