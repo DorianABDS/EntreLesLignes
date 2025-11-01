@@ -1,9 +1,12 @@
-name: Deploy Frontend to Hostinger
-# Build frontend and deploy to Hostinger via FTP on push to main/ci-cd
+name: CD Frontend - Hostinger
 
 on:
   push:
     branches: [ main, ci-cd ]
+    paths:
+      - 'frontend/**'
+      - '.github/workflows/cd-frontend.yml'
+  workflow_dispatch:
 
 jobs:
   build-and-deploy:
@@ -12,12 +15,10 @@ jobs:
 
     steps:
       - name: Checkout code
-        # Get repository code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup Node.js
-        # Install Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: '20.x'
 
